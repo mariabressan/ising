@@ -10,7 +10,7 @@ ylims = {"C":3,"Chi":40,"chi_scaling":0.06}
 
 def load():
     results = {}
-    for lattice_dir in glob("output/*"):
+    for lattice_dir in glob("out/*"):
         L = int(os.path.basename(lattice_dir))  
         results[L] = {}
         for file in glob(f"{lattice_dir}/*.pkl"):

@@ -84,7 +84,7 @@ def simulate(L, T):
     }
 
     # Ensure output directory exists
-    output_dir = f'output/{L}/'
+    output_dir = f'out/{L}/'
     os.makedirs(output_dir, exist_ok=True)
 
     # Save results
