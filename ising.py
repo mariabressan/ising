@@ -6,7 +6,6 @@ from numba import jit
 
 @jit
 def energy(lattice, N, J):
-    """Calculate total energy with periodic boundary conditions."""
     E = 0
     for i in range(N):
         for j in range(N):
@@ -17,7 +16,7 @@ def energy(lattice, N, J):
 
 @jit
 def metropolis(lattice, N, T, J, n_sweeps, measure_every):
-    """Run Metropolis algorithm."""
+    # Run Metropolis algorithm
     total_sites = N * N
 
     total_energy = 0
@@ -49,7 +48,6 @@ def metropolis(lattice, N, T, J, n_sweeps, measure_every):
             total_mag2 += M**2
             n_measurements += 1
 
-    # Average measurements
     avg_energy = total_energy / n_measurements
     avg_energy2 = total_energy2 / n_measurements
     avg_mag = total_mag / n_measurements
@@ -58,14 +56,14 @@ def metropolis(lattice, N, T, J, n_sweeps, measure_every):
     return avg_energy, avg_energy2, avg_mag, avg_mag2
 
 def simulate(L, T):
-    """Main simulation routine."""
+    # Main Simulation
     J = 1  # Interaction strength
     n_thermalization = 10**5  # Thermalization sweeps
     n_measurement = 3 * 10**5  # Measurement sweeps
     measure_every = 10  # Measure every 10 sweeps
     
     results = {}
-    lattice = 2 * np.random.randint(2, size=(L, L)) - 1  # Random initial state
+    lattice = 2 * np.random.randint(2, size=(L, L)) - 1 
     
     # Thermalize
     metropolis(lattice, L, T, J, n_thermalization, measure_every=1)
@@ -76,9 +74,8 @@ def simulate(L, T):
     # Calculate observables
     specific_heat = (avg_E2 - avg_E**2) / (T**2)
     susceptibility = (avg_M2 - avg_M**2) / T
-    #susceptibility = N*(avg_M2/N - avg_M**2) / T
 
-    # Store results
+    # Calculate results
     results = {
         'E': avg_E / (L**2),
         'C': specific_heat / (L**2),
@@ -96,17 +93,20 @@ def simulate(L, T):
 
     return results
 
-# Main Simulation 
-L_sizes = [16]  # [10,16,24,36] Example lattice sizes
-T_values = np.arange(0.015, 4.5 + 0.015, 0.015)  # Temperature range
-T_values = [round(T, 5) for T in T_values]
+def main():
+    L_sizes = [10,16,24,36] Lattice sizes
+    T_values = np.arange(0.015, 4.5 + 0.015, 0.015)
+    T_values = [round(T, 5) for T in T_values]
 
-time_i = time.time()
-for L in L_sizes:
-    print(f"L={L}")
-    for i, T in enumerate(T_values):
-        simulate(L, T)
-        elapsed = (time.time() - time_i) / 60
-        expected = elapsed / (i + 1) * len(T_values)
-        progress = (i + 1) / len(T_values) * 100
-        print(f"   T={T:.5f}, Done {elapsed:.2f} min ({progress:.1f}%), Expected Total: {expected:.2f} min")
+    time_i = time.time()
+    for L in L_sizes:
+        print(f"L={L}")
+        for i, T in enumerate(T_values):
+            simulate(L, T)
+            elapsed = (time.time() - time_i) / 60
+            expected = elapsed / (i + 1) * len(T_values)
+            progress = (i + 1) / len(T_values) * 100
+            print(f"   T={T:.5f}, Done {elapsed:.2f} min ({progress:.1f}%), Expected Total: {expected:.2f} min")
+
+if __name__ == "__main__":
+    main()
