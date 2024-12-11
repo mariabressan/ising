@@ -1,0 +1,18 @@
+
+executable              = run_numba.sh
++JobFlavour             = "tomorrow"
++AccountingGroup        = ""
+getenv                  = True
+#+SingularityImage       = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/batch-team/containers/plusbatch/cs8-full:latest"
+#requirements            = (OpSysAndVer =?= "CentOS8")
+Priority                = +20
+output                  = $(ClusterId).$(ProcId).out
+error                   = $(ClusterId).$(ProcId).err
+log                     = $(ClusterID).log
+should_transfer_files   = YES
+#request_memory          = 40000
+when_to_transfer_output = ON_EXIT_OR_EVICT
+transfer_input_files    = main.py
+#request_cpus            = 8
+initialdir              = /afs/cern.ch/user/m/mbressan/private/ising
+queue arguments from args.txt
